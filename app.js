@@ -318,42 +318,52 @@ function showAIMsg(text, ok) {
 //  RENDER: KALORIBALANSE
 // ═════════════════════════════════════════════════════════
 function renderBalance() {
-  const goal     = settings.maal || 2000;
-  const eaten    = dayData.meals    .reduce((s, m) => s + (m.kcal        ?? 0), 0);
-  const exercise = dayData.exercises.reduce((s, x) => s + (x.kcal_burned ?? 0), 0);
+  const goal      = settings.maal || 2000;
+  const tdee      = kalkulerTDEE(settings) ?? goal;
+  const eaten     = dayData.meals    .reduce((s, m) => s + (m.kcal        ?? 0), 0);
+  const exercise  = dayData.exercises.reduce((s, x) => s + (x.kcal_burned ?? 0), 0);
 
-  // Uten trening: gjenstår = mål - spist
-  const remaining = goal - eaten;
-  const ok        = remaining >= 0;
+  const remaining  = goal - eaten;                     // gjenstår uten trening
+  const canEat     = goal - eaten + exercise;          // gjenstår med trening
+  const totalNeed  = tdee + exercise;                  // dagens totale behov inkl. trening
+  const deficit    = totalNeed - eaten;                // estimert underskudd
+  const ok         = remaining >= 0;
 
-  // Med trening: kan spise = mål - spist + trening
-  const canEat = goal - eaten + exercise;
+  // Hovedkort
+  document.getElementById('bal-eaten').textContent = `${eaten} kcal`;
+  document.getElementById('bal-goal').textContent  = `${goal} kcal`;
 
-  document.getElementById('bal-eaten').textContent    = `${eaten} kcal`;
-  document.getElementById('bal-goal').textContent     = `${goal} kcal`;
-
-  // Gjenstår (uten trening)
   const remEl = document.getElementById('bal-remaining');
-  remEl.textContent = `${Math.abs(remaining)} kcal${remaining < 0 ? ' over' : ''}`;
-  remEl.className   = 'bal-num bold ' + (ok ? 'green' : 'red');
+  remEl.textContent = `${Math.abs(remaining)} kcal${remaining < 0 ? ' over mål' : ''}`;
+  remEl.className   = 'bal-val bold ' + (ok ? 'green' : 'red');
+
+  // Trening-rader: vis kun hvis trening er logget
+  const exRow    = document.getElementById('bal-exercise-row');
+  const canRow   = document.getElementById('bal-caneat-row');
+  if (exercise > 0) {
+    document.getElementById('bal-exercise').textContent = `${exercise} kcal`;
+    document.getElementById('bal-can-eat').textContent  = `${canEat} kcal til`;
+    exRow.style.display  = 'flex';
+    canRow.style.display = 'flex';
+  } else {
+    exRow.style.display  = 'none';
+    canRow.style.display = 'none';
+  }
 
   // Progressbar
   const pct  = Math.min(100, (eaten / goal) * 100);
   const fill = document.getElementById('progress-fill');
   fill.style.width      = pct + '%';
   fill.style.background = ok ? '#22c55e' : '#ef4444';
-  document.getElementById('prog-left').textContent  = `${Math.round(pct)}%`;
+  document.getElementById('prog-left').textContent  = `Spist: ${eaten} kcal`;
   document.getElementById('prog-right').textContent = `Mål: ${goal} kcal`;
 
-  // Sekundærkort: vis kun hvis trening er logget
-  const exBox = document.getElementById('bal-exercise-box');
-  if (exercise > 0) {
-    document.getElementById('bal-exercise').textContent = `+${exercise} kcal`;
-    document.getElementById('bal-can-eat').textContent  = `${canEat} kcal til i dag`;
-    exBox.style.display = 'block';
-  } else {
-    exBox.style.display = 'none';
-  }
+  // Infofelt
+  document.getElementById('bal-tdee').textContent       = `${tdee} kcal`;
+  document.getElementById('bal-total-need').textContent = `${totalNeed} kcal`;
+  const defEl = document.getElementById('bal-deficit');
+  defEl.textContent = `${Math.abs(deficit)} kcal${deficit < 0 ? ' (overskudd)' : ''}`;
+  defEl.className   = deficit >= 0 ? 'green' : 'red';
 
   document.getElementById('balance-card').style.borderColor = ok ? '#22c55e' : '#ef4444';
 }

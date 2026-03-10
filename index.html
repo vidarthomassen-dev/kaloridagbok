@@ -57,42 +57,27 @@
 
         <!-- Kaloribalanse-kort -->
         <div id="balance-card" class="card balance-card">
-          <p class="bal-title">Kalorier i dag</p>
+          <div class="bal-title">Kalorier i dag</div>
 
-          <!-- Primærkort: spist / mål / gjenstår -->
-          <div class="bal-box">
-            <div class="bal-line">
-              <span class="bal-label">Spist:</span>
-              <span class="bal-num" id="bal-eaten"></span>
-            </div>
-            <div class="bal-line">
-              <span class="bal-label">Daglig mål:</span>
-              <span class="bal-num" id="bal-goal"></span>
-            </div>
-            <div class="bal-spacer"></div>
-            <div class="bal-line">
-              <span class="bal-label">Gjenstår:</span>
-              <span class="bal-num bold" id="bal-remaining"></span>
-            </div>
+          <!-- Hovedkort -->
+          <div class="bal-main">
+            <div class="bal-row"><span class="bal-label">Spist i dag</span><span class="bal-val" id="bal-eaten"></span></div>
+            <div class="bal-row"><span class="bal-label">Mål</span><span class="bal-val" id="bal-goal"></span></div>
+            <div class="bal-sep"></div>
+            <div class="bal-row"><span class="bal-label">Gjenstår</span><span class="bal-val bold" id="bal-remaining"></span></div>
+            <div class="bal-row" id="bal-exercise-row"><span class="bal-label">+ trening</span><span class="bal-val blue" id="bal-exercise"></span></div>
+            <div class="bal-row" id="bal-caneat-row"><span class="bal-label">Du kan derfor spise</span><span class="bal-val bold" id="bal-can-eat"></span></div>
           </div>
 
           <!-- Progressbar -->
           <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-          <div class="progress-labels">
-            <span id="prog-left"></span>
-            <span id="prog-right"></span>
-          </div>
+          <div class="progress-labels"><span id="prog-left"></span><span id="prog-right"></span></div>
 
-          <!-- Sekundærkort: trening + ekstra rom -->
-          <div class="bal-box bal-box-secondary" id="bal-exercise-box">
-            <div class="bal-line">
-              <span class="bal-label">Trening:</span>
-              <span class="bal-num blue" id="bal-exercise"></span>
-            </div>
-            <div class="bal-line">
-              <span class="bal-label">Du kan derfor spise:</span>
-              <span class="bal-num bold" id="bal-can-eat"></span>
-            </div>
+          <!-- Infofelt -->
+          <div class="bal-info">
+            <div class="bal-row muted"><span class="bal-label">Vedlikeholdsbehov</span><span id="bal-tdee"></span></div>
+            <div class="bal-row muted"><span class="bal-label">Dagens totale behov inkl. trening</span><span id="bal-total-need"></span></div>
+            <div class="bal-row muted"><span class="bal-label">Estimert underskudd i dag</span><span id="bal-deficit" class="green"></span></div>
           </div>
         </div>
 

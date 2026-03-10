@@ -121,35 +121,37 @@ main { max-width: 720px; margin: 0 auto; padding: 0 16px 80px; }
 .net-big.green { color: var(--green); }
 .net-big.red   { color: var(--red); }
 
-/* ── NYTT KALORIBALANSE-KORT ── */
+/* ── KALORIBALANSE-KORT ── */
 .bal-title {
-  font-size: 15px; font-weight: 600; color: var(--muted);
-  text-transform: uppercase; letter-spacing: 0.5px;
-  margin-bottom: 12px;
+  font-size: 13px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.8px;
+  margin-bottom: 14px;
 }
-
-.bal-box {
-  background: var(--subtle);
-  border-radius: 10px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
-  font-family: 'DM Mono', 'Courier New', monospace;
-  display: flex; flex-direction: column; gap: 4px;
+.bal-main {
+  display: flex; flex-direction: column; gap: 0;
+  margin-bottom: 14px;
 }
-.bal-box-secondary { margin-top: 10px; margin-bottom: 0; }
-
-.bal-line {
-  display: flex; align-items: baseline; gap: 8px;
-  font-size: 16px; line-height: 1.7;
+.bal-row {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 6px 0; font-size: 15px;
 }
-.bal-label { color: var(--muted); min-width: 140px; flex-shrink: 0; }
-.bal-num   { font-weight: 600; font-size: 17px; }
-.bal-num.bold  { font-weight: 700; font-size: 18px; }
-.bal-num.green { color: var(--green); }
-.bal-num.red   { color: var(--red); }
-.bal-num.blue  { color: var(--blue); }
-
-.bal-spacer { height: 8px; }
+.bal-row.muted { font-size: 13px; color: var(--muted); }
+.bal-label { color: var(--text); }
+.bal-row.muted .bal-label { color: var(--muted); }
+.bal-val        { font-weight: 600; }
+.bal-val.bold   { font-weight: 700; font-size: 17px; }
+.bal-val.green  { color: var(--green); }
+.bal-val.red    { color: var(--red); }
+.bal-val.blue   { color: var(--blue); }
+.bal-sep {
+  height: 1px; background: var(--border);
+  margin: 6px 0;
+}
+.bal-info {
+  border-top: 1px solid var(--border);
+  margin-top: 14px; padding-top: 12px;
+  display: flex; flex-direction: column; gap: 0;
+}
 
 .progress-track {
   background: var(--subtle); border-radius: 99px;
