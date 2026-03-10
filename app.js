@@ -35,9 +35,10 @@ function toDateStr(d) {
 }
 
 function formatDateNO(str) {
-  return new Date(str + 'T12:00:00').toLocaleDateString('nb-NO', {
+  const s = new Date(str + 'T12:00:00').toLocaleDateString('nb-NO', {
     weekday: 'long', day: 'numeric', month: 'long',
   });
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function kalkulerBMR(s) {
@@ -329,12 +330,10 @@ function renderBalance() {
   const deficit    = totalNeed - eaten;
   const ok         = remaining >= 0;
 
-  // Hero-tall: gjenstår
+  // Hero-tall: gjenstår (bare tallet, «kcal gjenstår» er i HTML)
   const remEl = document.getElementById('bal-remaining');
   remEl.textContent = Math.abs(remaining);
-  remEl.style.color = ok
-    ? 'var(--green)'
-    : 'var(--red)';
+  remEl.style.color = ok ? 'var(--green)' : 'var(--red)';
 
   // Stat-bokser
   document.getElementById('bal-eaten').textContent = `${eaten} kcal`;
@@ -362,11 +361,11 @@ function renderBalance() {
   document.getElementById('prog-right').textContent = `Mål: ${goal} kcal`;
 
   // Infofelt
-  document.getElementById('bal-tdee').textContent       = `${tdee} kcal`;
-  document.getElementById('bal-total-need').textContent = `${totalNeed} kcal`;
+  document.getElementById('bal-tdee').textContent       = `${tdee}`;
+  document.getElementById('bal-total-need').textContent = `${totalNeed}`;
   const defEl = document.getElementById('bal-deficit');
-  defEl.textContent = `${Math.abs(deficit)} kcal${deficit < 0 ? ' (overskudd)' : ''}`;
-  defEl.className   = 'val ' + (deficit >= 0 ? 'green' : 'red');
+  defEl.textContent = `${Math.abs(deficit)} kcal`;
+  defEl.className   = 'info-val ' + (deficit >= 0 ? 'green' : 'red');
 
   // Kortbord
   const card = document.getElementById('balance-card');
@@ -490,6 +489,8 @@ function renderAll() {
 
 function renderDate() {
   document.getElementById('current-date').textContent = formatDateNO(currentDate);
+  const picker = document.getElementById('date-picker');
+  if (picker) picker.value = currentDate;
 }
 
 // ═════════════════════════════════════════════════════════
@@ -617,18 +618,8 @@ document.getElementById('ai-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') registerWithAI();
 });
 
-document.getElementById('prev-day').addEventListener('click', () => {
-  const d = new Date(currentDate + 'T12:00:00');
-  d.setDate(d.getDate() - 1);
-  currentDate = toDateStr(d);
-  renderDate();
-  loadDay(currentDate);
-});
-
-document.getElementById('next-day').addEventListener('click', () => {
-  const d = new Date(currentDate + 'T12:00:00');
-  d.setDate(d.getDate() + 1);
-  currentDate = toDateStr(d);
+document.getElementById('date-picker').addEventListener('change', function() {
+  currentDate = this.value;
   renderDate();
   loadDay(currentDate);
 });

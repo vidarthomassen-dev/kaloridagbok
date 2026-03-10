@@ -39,47 +39,69 @@
     </header>
 
     <nav class="tabs">
-      <button class="tab active" data-tab="dag">I dag</button>
-      <button class="tab"        data-tab="statistikk">Statistikk</button>
-      <button class="tab"        data-tab="innstillinger">Innstillinger</button>
-    </nav>
+    <div class="tabs-inner">
+      <div class="tab-date-group tab active">
+        <span id="current-date"></span>
+        <button class="date-cal-btn" title="Velg dato" onclick="document.getElementById('date-picker').showPicker()">&#128197;</button>
+        <input type="date" id="date-picker" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+      </div>
+      <button class="tab tab-30">Statistikk</button>
+      <button class="tab tab-30">Innstillinger</button>
+    </div>
+  </nav>
 
     <main>
 
       <!-- ── I DAG ─────────────────── -->
       <section id="tab-dag" class="tab-content">
 
-        <div class="date-nav">
-          <button id="prev-day">&#8249;</button>
-          <span   id="current-date"></span>
-          <button id="next-day">&#8250;</button>
+        <!-- Hero-kort -->
+    <div class="balance-card">
+      <div class="bal-title" style="text-align:right">Kalorier i dag</div>
+
+      <div class="hero-remaining">
+        <span class="hero-number" id="bal-remaining">0</span>
+        <span class="hero-unit">kcal</span>
+        <span class="hero-label-inline">gjenstår</span>
+      </div>
+
+      <div class="bal-stats">
+        <div class="bal-stat-box">
+          <div class="bal-stat-label">Spist i dag</div>
+          <div class="bal-stat-val">1316 kcal</div>
         </div>
-
-        <!-- Kaloribalanse-kort -->
-        <div id="balance-card" class="card balance-card">
-          <div class="bal-title">Kalorier i dag</div>
-
-          <!-- Hovedkort -->
-          <div class="bal-main">
-            <div class="bal-row"><span class="bal-label">Spist i dag</span><span class="bal-val" id="bal-eaten"></span></div>
-            <div class="bal-row"><span class="bal-label">Mål</span><span class="bal-val" id="bal-goal"></span></div>
-            <div class="bal-sep"></div>
-            <div class="bal-row"><span class="bal-label">Gjenstår</span><span class="bal-val bold" id="bal-remaining"></span></div>
-            <div class="bal-row" id="bal-exercise-row"><span class="bal-label">+ trening</span><span class="bal-val blue" id="bal-exercise"></span></div>
-            <div class="bal-row" id="bal-caneat-row"><span class="bal-label">Du kan derfor spise</span><span class="bal-val bold" id="bal-can-eat"></span></div>
-          </div>
-
-          <!-- Progressbar -->
-          <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
-          <div class="progress-labels"><span id="prog-left"></span><span id="prog-right"></span></div>
-
-          <!-- Infofelt -->
-          <div class="bal-info">
-            <div class="bal-row muted"><span class="bal-label">Vedlikeholdsbehov</span><span id="bal-tdee"></span></div>
-            <div class="bal-row muted"><span class="bal-label">Dagens totale behov inkl. trening</span><span id="bal-total-need"></span></div>
-            <div class="bal-row muted"><span class="bal-label">Estimert underskudd i dag</span><span id="bal-deficit" class="green"></span></div>
-          </div>
+        <div class="bal-stat-box">
+          <div class="bal-stat-label">Daglig mål</div>
+          <div class="bal-stat-val">2000 kcal</div>
         </div>
+        <div class="bal-stat-box">
+          <div class="bal-stat-label">+ Trening</div>
+          <div class="bal-stat-val blue">100 kcal</div>
+        </div>
+        <div class="bal-stat-box">
+          <div class="bal-stat-label">Kan spise til</div>
+          <div class="bal-stat-val green">784 kcal</div>
+        </div>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-labels">
+        <span id="prog-left"></span>
+        <span id="prog-right"></span>
+      </div>
+
+      <div class="bal-info">
+        <div class="bal-info-compact">
+          <span class="info-seg">TDEE <span class="info-val" id="bal-tdee"></span></span>
+          <span class="info-div">|</span>
+          <span class="info-seg">Med trening <span class="info-val" id="bal-total-need"></span></span>
+          <span class="info-div">|</span>
+          <span class="info-seg">Underskudd <span class="info-val green" id="bal-deficit"></span></span>
+        </div>
+      </div>
+    </div>
 
         <!-- AI-registrering -->
         <div class="card ai-card">
@@ -98,7 +120,7 @@
         <!-- Måltider -->
         <div class="card">
           <div class="section-hdr">
-            <span>&#x1F37D;&#xFE0F; <strong>Måltider</strong></span>
+            <span class="section-name">Måltider</span>
             <span id="meal-badge" class="badge">0</span>
           </div>
           <div id="meals-list"></div>
@@ -108,7 +130,7 @@
         <!-- Trening -->
         <div class="card">
           <div class="section-hdr">
-            <span>&#x1F4AA; <strong>Trening</strong></span>
+            <span class="section-name">Trening</span>
             <span id="ex-badge" class="badge">0</span>
           </div>
           <div id="ex-list"></div>
