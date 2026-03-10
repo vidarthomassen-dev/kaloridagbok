@@ -141,9 +141,9 @@ async function loadSettings() {
     settings = { ...settings, ...data };
     document.getElementById('s-kjonn').value     = settings.kjonn     ?? 'mann';
     document.getElementById('s-aktivitet').value = settings.aktivitet ?? 'lett';
-    document.getElementById('s-alder').value     = settings.alder     ?? '';
-    document.getElementById('s-vekt').value      = settings.vekt      ?? '';
-    document.getElementById('s-hoyde').value     = settings.hoyde     ?? '';
+    document.getElementById('s-alder').value     = settings.alder  || '';
+    document.getElementById('s-vekt').value      = settings.vekt   || '';
+    document.getElementById('s-hoyde').value     = settings.hoyde  || '';
     document.getElementById('s-maal').value      = settings.maal      ?? 2000;
   }
 
@@ -361,11 +361,17 @@ function renderBalance() {
   document.getElementById('prog-right').textContent = `Mål: ${goal} kcal`;
 
   // Infofelt
-  document.getElementById('bal-tdee').textContent       = `${tdee}`;
-  document.getElementById('bal-total-need').textContent = `${totalNeed}`;
+  const tdeeKnown = kalkulerTDEE(settings) !== null;
+  document.getElementById('bal-tdee').textContent       = tdeeKnown ? `${tdee}` : '–';
+  document.getElementById('bal-total-need').textContent = tdeeKnown ? `${totalNeed}` : '–';
   const defEl = document.getElementById('bal-deficit');
-  defEl.textContent = `${Math.abs(deficit)} kcal`;
-  defEl.className   = 'info-val ' + (deficit >= 0 ? 'green' : 'red');
+  if (tdeeKnown) {
+    defEl.textContent = `${Math.abs(deficit)} kcal`;
+    defEl.className   = 'info-val ' + (deficit >= 0 ? 'green' : 'red');
+  } else {
+    defEl.textContent = '–';
+    defEl.className   = 'info-val muted';
+  }
 
   // Kortbord
   const card = document.getElementById('balance-card');
