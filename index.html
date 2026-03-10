@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kaloridagbok</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Supabase JS via CDN – ingen byggsteg nødvendig -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       LOGIN-SIDE
+  ══════════════════════════════════ -->
+  <div id="page-login" class="page">
+    <div class="login-box">
+      <div class="logo"><span class="logo-kalori">KALORI</span><span class="logo-dagbok">DAGBOK</span></div>
+      <h2>Logg inn</h2>
+      <input id="login-email"    type="email"    placeholder="E-post" />
+      <input id="login-password" type="password" placeholder="Passord" />
+      <button id="btn-login"    class="btn-primary">Logg inn</button>
+      <button id="btn-register" class="btn-secondary">Opprett konto</button>
+      <p id="login-msg" class="login-msg"></p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       APP-SIDE
+  ══════════════════════════════════ -->
+  <div id="page-app" class="page hidden">
+
+    <header>
+      <div class="logo"><span class="logo-kalori">KALORI</span><span class="logo-dagbok">DAGBOK</span></div>
+      <div class="header-right">
+        <button id="btn-dark"   class="icon-btn" title="Bytt modus">☀️</button>
+        <button id="btn-logout" class="btn-logout">Logg ut</button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab active" data-tab="dag">I dag</button>
+      <button class="tab"        data-tab="statistikk">Statistikk</button>
+      <button class="tab"        data-tab="innstillinger">Innstillinger</button>
+    </nav>
+
+    <main>
+
+      <!-- ── I DAG ─────────────────── -->
+      <section id="tab-dag" class="tab-content">
+
+        <div class="date-nav">
+          <button id="prev-day">&#8249;</button>
+          <span   id="current-date"></span>
+          <button id="next-day">&#8250;</button>
+        </div>
+
+        <!-- Kaloribalanse-kort -->
+        <div id="balance-card" class="card balance-card">
+          <div class="balance-header">
+            <span class="balance-title">Kaloribalanse</span>
+            <span id="balance-status-icon">&#10003;</span>
+          </div>
+          <div class="balance-rows">
+            <div class="balance-row">
+              <span>&#x1F6B6;</span>
+              <div class="balance-label-col">
+                <span>Total daglig forbrenning (TDEE)</span>
+                <small id="bmr-note" class="muted"></small>
+              </div>
+              <span id="bal-tdee" class="bval muted"></span>
+            </div>
+            <div class="balance-row">
+              <span>&#x1F4AA;</span>
+              <span class="flex1">Forbrent på trening</span>
+              <span id="bal-exercise" class="bval blue"></span>
+            </div>
+            <div class="balance-row">
+              <span>&#x1F37D;&#xFE0F;</span>
+              <span class="flex1">Spist i dag</span>
+              <span id="bal-eaten" class="bval bold"></span>
+            </div>
+          </div>
+          <div class="balance-net-row">
+            <span id="balance-net-icon">&#x2705;</span>
+            <strong>Netto kaloribalanse</strong>
+            <span id="bal-net" class="net-value"></span>
+          </div>
+          <p id="bal-desc" class="balance-desc"></p>
+          <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
+          <div class="progress-labels">
+            <span id="prog-left"></span>
+            <span id="prog-right"></span>
+          </div>
+        </div>
+
+        <!-- AI-registrering -->
+        <div class="card ai-card">
+          <div class="ai-header">
+            <span>&#x2728;</span>
+            <span class="ai-title">Registrer med AI</span>
+            <span class="ai-hint">Skriv fritt &#8211; AI tolker</span>
+          </div>
+          <div class="ai-row">
+            <input id="ai-input" type="text" placeholder='"spiste halv grandiosa" eller "løp 5 km"' />
+            <button id="btn-ai" class="btn-primary">Registrer &#8594;</button>
+          </div>
+          <p id="ai-msg" class="ai-msg hidden"></p>
+        </div>
+
+        <!-- Måltider -->
+        <div class="card">
+          <div class="section-hdr">
+            <span>&#x1F37D;&#xFE0F; <strong>Måltider</strong></span>
+            <span id="meal-badge" class="badge">0</span>
+          </div>
+          <div id="meals-list"></div>
+          <div id="meals-total" class="section-total hidden"></div>
+        </div>
+
+        <!-- Trening -->
+        <div class="card">
+          <div class="section-hdr">
+            <span>&#x1F4AA; <strong>Trening</strong></span>
+            <span id="ex-badge" class="badge">0</span>
+          </div>
+          <div id="ex-list"></div>
+          <div id="ex-total" class="section-total hidden"></div>
+        </div>
+
+      </section>
+
+      <!-- ── STATISTIKK ─────────────── -->
+      <section id="tab-statistikk" class="tab-content hidden">
+        <div class="period-tabs">
+          <button class="period-tab active" data-period="uke">Denne uken</button>
+          <button class="period-tab"        data-period="maned">Måneden</button>
+          <button class="period-tab"        data-period="ar">Året</button>
+        </div>
+        <div id="stat-grid"    class="stat-grid"></div>
+        <div id="stat-balance" class="card balance-card" style="margin-top:12px"></div>
+        <div id="stat-week"    class="card"              style="margin-top:12px"></div>
+      </section>
+
+      <!-- ── INNSTILLINGER ──────────── -->
+      <section id="tab-innstillinger" class="tab-content hidden">
+
+        <div class="card settings-card">
+          <h3>Din profil</h3>
+          <p class="muted small">Brukes til å beregne BMR og TDEE (Mifflin&#8211;St Jeor).</p>
+          <div class="settings-grid">
+            <label>Kjønn
+              <select id="s-kjonn">
+                <option value="mann">Mann</option>
+                <option value="kvinne">Kvinne</option>
+              </select>
+            </label>
+            <label>Aktivitetsnivå
+              <select id="s-aktivitet">
+                <option value="stillesittende">Stillesittende (&#215;1.2)</option>
+                <option value="lett" selected>Lett aktiv (&#215;1.35)</option>
+                <option value="moderat">Moderat aktiv (&#215;1.5)</option>
+              </select>
+            </label>
+            <label>Alder (år)<input id="s-alder" type="number" placeholder="f.eks. 35" /></label>
+            <label>Vekt (kg)<input  id="s-vekt"  type="number" placeholder="f.eks. 80" /></label>
+            <label>Høyde (cm)<input id="s-hoyde" type="number" placeholder="f.eks. 180" /></label>
+            <label>Kalori-mål/dag<input id="s-maal" type="number" placeholder="f.eks. 2000" /></label>
+          </div>
+          <div id="bmr-live" class="bmr-live hidden"></div>
+        </div>
+
+        <div class="card settings-card">
+          <h3>Anthropic API-nøkkel</h3>
+          <p class="muted small">Nødvendig for AI-registrering. Lagres kun i nettleseren din.</p>
+          <input id="s-apikey" type="password" placeholder="sk-ant-..." />
+          <small>Finn nøkkelen på <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></small>
+        </div>
+
+        <button id="btn-save" class="btn-primary full-width">Lagre innstillinger</button>
+        <p id="save-ok" class="save-ok hidden">&#10003; Lagret</p>
+
+      </section>
+
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
