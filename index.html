@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Kaloridagbok</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Supabase JS via CDN – ingen byggsteg nødvendig -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-  <!-- ══════════════════════════════════
-       LOGIN-SIDE
-  ══════════════════════════════════ -->
+  <!-- LOGIN -->
   <div id="page-login" class="page">
     <div class="login-box">
       <div class="logo"><span class="logo-kalori">KALORI</span><span class="logo-dagbok">DAGBOK</span></div>
@@ -25,9 +22,7 @@
     </div>
   </div>
 
-  <!-- ══════════════════════════════════
-       APP-SIDE
-  ══════════════════════════════════ -->
+  <!-- APP -->
   <div id="page-app" class="page hidden">
 
     <header>
@@ -39,69 +34,69 @@
     </header>
 
     <nav class="tabs">
-    <div class="tabs-inner">
-      <div class="tab-date-group tab active">
-        <span id="current-date"></span>
-        <button class="date-cal-btn" title="Velg dato" onclick="document.getElementById('date-picker').showPicker()">&#128197;</button>
-        <input type="date" id="date-picker" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+      <div class="tabs-inner">
+        <div class="tab-date-group tab active" data-tab="dag">
+          <span id="current-date"></span>
+          <button class="date-cal-btn" title="Velg dato" onclick="document.getElementById('date-picker').showPicker()">&#128197;</button>
+          <input type="date" id="date-picker" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;">
+        </div>
+        <button class="tab tab-30" data-tab="statistikk">Statistikk</button>
+        <button class="tab tab-30" data-tab="innstillinger">Innstillinger</button>
       </div>
-      <button class="tab tab-30">Statistikk</button>
-      <button class="tab tab-30">Innstillinger</button>
-    </div>
-  </nav>
+    </nav>
 
     <main>
 
-      <!-- ── I DAG ─────────────────── -->
+      <!-- I DAG -->
       <section id="tab-dag" class="tab-content">
 
         <!-- Hero-kort -->
-    <div class="balance-card">
-      <div class="bal-title" style="text-align:right">Kalorier i dag</div>
+        <div id="balance-card" class="balance-card">
+          <div class="bal-title" style="text-align:right">Kalorier i dag</div>
 
-      <div class="hero-remaining">
-        <span class="hero-number" id="bal-remaining">0</span>
-        <span class="hero-unit">kcal</span>
-        <span class="hero-label-inline">gjenstår</span>
-      </div>
+          <div class="hero-remaining">
+            <span class="hero-number" id="bal-remaining">0</span>
+            <span class="hero-unit">kcal</span>
+            <span class="hero-label-inline">gjenstår</span>
+          </div>
 
-      <div class="bal-stats">
-        <div class="bal-stat-box">
-          <div class="bal-stat-label">Spist i dag</div>
-          <div class="bal-stat-val">1316 kcal</div>
-        </div>
-        <div class="bal-stat-box">
-          <div class="bal-stat-label">Daglig mål</div>
-          <div class="bal-stat-val">2000 kcal</div>
-        </div>
-        <div class="bal-stat-box">
-          <div class="bal-stat-label">+ Trening</div>
-          <div class="bal-stat-val blue">100 kcal</div>
-        </div>
-        <div class="bal-stat-box">
-          <div class="bal-stat-label">Kan spise til</div>
-          <div class="bal-stat-val green">784 kcal</div>
-        </div>
-      </div>
+          <div class="bal-stats">
+            <div class="bal-stat-box">
+              <div class="bal-stat-label">Spist i dag</div>
+              <div class="bal-stat-val" id="bal-eaten"></div>
+            </div>
+            <div class="bal-stat-box">
+              <div class="bal-stat-label">Daglig mål</div>
+              <div class="bal-stat-val" id="bal-goal"></div>
+            </div>
+            <div class="bal-stat-box" id="bal-exercise-row" style="display:none">
+              <div class="bal-stat-label">+ Trening</div>
+              <div class="bal-stat-val blue" id="bal-exercise"></div>
+            </div>
+            <div class="bal-stat-box" id="bal-caneat-row" style="display:none">
+              <div class="bal-stat-label">Kan spise til</div>
+              <div class="bal-stat-val green" id="bal-can-eat"></div>
+            </div>
+          </div>
 
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill"></div>
-      </div>
-      <div class="progress-labels">
-        <span id="prog-left"></span>
-        <span id="prog-right"></span>
-      </div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <div class="progress-labels">
+            <span id="prog-left"></span>
+            <span id="prog-right"></span>
+          </div>
 
-      <div class="bal-info">
-        <div class="bal-info-compact">
-          <span class="info-seg">TDEE <span class="info-val" id="bal-tdee"></span></span>
-          <span class="info-div">|</span>
-          <span class="info-seg">Med trening <span class="info-val" id="bal-total-need"></span></span>
-          <span class="info-div">|</span>
-          <span class="info-seg">Underskudd <span class="info-val green" id="bal-deficit"></span></span>
+          <div class="bal-info">
+            <div class="bal-info-compact">
+              <span class="info-seg">TDEE <span class="info-val" id="bal-tdee"></span></span>
+              <span class="info-div">|</span>
+              <span class="info-seg">Med trening <span class="info-val" id="bal-total-need"></span></span>
+              <span class="info-div">|</span>
+              <span class="info-seg">Underskudd <span class="info-val" id="bal-deficit"></span></span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
         <!-- AI-registrering -->
         <div class="card ai-card">
@@ -139,7 +134,7 @@
 
       </section>
 
-      <!-- ── STATISTIKK ─────────────── -->
+      <!-- STATISTIKK -->
       <section id="tab-statistikk" class="tab-content hidden">
         <div class="period-tabs">
           <button class="period-tab active" data-period="uke">Denne uken</button>
@@ -147,13 +142,12 @@
           <button class="period-tab"        data-period="ar">Året</button>
         </div>
         <div id="stat-grid"    class="stat-grid"></div>
-        <div id="stat-balance" class="card balance-card" style="margin-top:12px"></div>
-        <div id="stat-week"    class="card"              style="margin-top:12px"></div>
+        <div id="stat-balance" class="card"  style="margin-top:12px"></div>
+        <div id="stat-week"    class="card"  style="margin-top:12px"></div>
       </section>
 
-      <!-- ── INNSTILLINGER ──────────── -->
+      <!-- INNSTILLINGER -->
       <section id="tab-innstillinger" class="tab-content hidden">
-
         <div class="card settings-card">
           <h3>Din profil</h3>
           <p class="muted small">Brukes til å beregne BMR og TDEE (Mifflin&#8211;St Jeor).</p>
@@ -178,12 +172,8 @@
           </div>
           <div id="bmr-live" class="bmr-live hidden"></div>
         </div>
-
-
-
         <button id="btn-save" class="btn-primary full-width">Lagre innstillinger</button>
         <p id="save-ok" class="save-ok hidden">&#10003; Lagret</p>
-
       </section>
 
     </main>

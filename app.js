@@ -120,10 +120,10 @@ async function showApp() {
 //  TABS
 // ═════════════════════════════════════════════════════════
 function switchTab(name) {
-  document.querySelectorAll('.tab').forEach(b =>
+  document.querySelectorAll('.tab, .tab-date-group').forEach(b =>
     b.classList.toggle('active', b.dataset.tab === name));
   document.querySelectorAll('.tab-content').forEach(s =>
-    s.classList.toggle('hidden', s.id !== `tab-${name}`));
+    s.classList.toggle('hidden', s.id !== 'tab-' + name));
   if (name === 'statistikk') renderStats();
 }
 
@@ -624,8 +624,13 @@ document.getElementById('date-picker').addEventListener('change', function() {
   loadDay(currentDate);
 });
 
-document.querySelectorAll('.tab').forEach(btn =>
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+document.querySelectorAll('.tab, .tab-date-group').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    // Don't trigger tab switch if clicking calendar button or picker
+    if (e.target.classList.contains('date-cal-btn') || e.target.id === 'date-picker') return;
+    if (btn.dataset.tab) switchTab(btn.dataset.tab);
+  });
+});
 
 document.querySelectorAll('.period-tab').forEach(btn =>
   btn.addEventListener('click', () => {
