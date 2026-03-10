@@ -323,26 +323,29 @@ function renderBalance() {
   const eaten     = dayData.meals    .reduce((s, m) => s + (m.kcal        ?? 0), 0);
   const exercise  = dayData.exercises.reduce((s, x) => s + (x.kcal_burned ?? 0), 0);
 
-  const remaining  = goal - eaten;                     // gjenstår uten trening
-  const canEat     = goal - eaten + exercise;          // gjenstår med trening
-  const totalNeed  = tdee + exercise;                  // dagens totale behov inkl. trening
-  const deficit    = totalNeed - eaten;                // estimert underskudd
+  const remaining  = goal - eaten;
+  const canEat     = goal - eaten + exercise;
+  const totalNeed  = tdee + exercise;
+  const deficit    = totalNeed - eaten;
   const ok         = remaining >= 0;
 
-  // Hovedkort
+  // Hero-tall: gjenstår
+  const remEl = document.getElementById('bal-remaining');
+  remEl.textContent = Math.abs(remaining);
+  remEl.style.color = ok
+    ? 'var(--green)'
+    : 'var(--red)';
+
+  // Stat-bokser
   document.getElementById('bal-eaten').textContent = `${eaten} kcal`;
   document.getElementById('bal-goal').textContent  = `${goal} kcal`;
 
-  const remEl = document.getElementById('bal-remaining');
-  remEl.textContent = `${Math.abs(remaining)} kcal${remaining < 0 ? ' over mål' : ''}`;
-  remEl.className   = 'bal-val bold ' + (ok ? 'green' : 'red');
-
-  // Trening-rader: vis kun hvis trening er logget
-  const exRow    = document.getElementById('bal-exercise-row');
-  const canRow   = document.getElementById('bal-caneat-row');
+  // Trening-bokser: vis kun hvis trening logget
+  const exRow  = document.getElementById('bal-exercise-row');
+  const canRow = document.getElementById('bal-caneat-row');
   if (exercise > 0) {
     document.getElementById('bal-exercise').textContent = `${exercise} kcal`;
-    document.getElementById('bal-can-eat').textContent  = `${canEat} kcal til`;
+    document.getElementById('bal-can-eat').textContent  = `${canEat} kcal`;
     exRow.style.display  = 'flex';
     canRow.style.display = 'flex';
   } else {
@@ -354,7 +357,7 @@ function renderBalance() {
   const pct  = Math.min(100, (eaten / goal) * 100);
   const fill = document.getElementById('progress-fill');
   fill.style.width      = pct + '%';
-  fill.style.background = ok ? '#22c55e' : '#ef4444';
+  fill.style.background = ok ? 'var(--green)' : 'var(--red)';
   document.getElementById('prog-left').textContent  = `Spist: ${eaten} kcal`;
   document.getElementById('prog-right').textContent = `Mål: ${goal} kcal`;
 
@@ -363,9 +366,14 @@ function renderBalance() {
   document.getElementById('bal-total-need').textContent = `${totalNeed} kcal`;
   const defEl = document.getElementById('bal-deficit');
   defEl.textContent = `${Math.abs(deficit)} kcal${deficit < 0 ? ' (overskudd)' : ''}`;
-  defEl.className   = deficit >= 0 ? 'green' : 'red';
+  defEl.className   = 'val ' + (deficit >= 0 ? 'green' : 'red');
 
-  document.getElementById('balance-card').style.borderColor = ok ? '#22c55e' : '#ef4444';
+  // Kortbord
+  const card = document.getElementById('balance-card');
+  card.style.borderColor = ok ? 'var(--green)' : 'var(--red)';
+  card.style.boxShadow   = ok
+    ? '0 8px 32px rgba(48,209,88,0.15), 0 2px 8px rgba(48,209,88,0.08)'
+    : '0 8px 32px rgba(255,59,48,0.15), 0 2px 8px rgba(255,59,48,0.08)';
 }
 
 // ═════════════════════════════════════════════════════════
