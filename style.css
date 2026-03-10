@@ -51,6 +51,25 @@ body {
 }
 .hidden { display: none !important; }
 
+/* ── PAGE ───────────────────────────────────── */
+.page.hidden { display: none !important; }
+
+/* ── LOGIN ───────────────────────────────────── */
+#page-login {
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100vh; padding: 24px;
+}
+.login-box {
+  background: var(--surface); border-radius: var(--r-xl);
+  box-shadow: var(--shadow-hero); padding: 40px 32px 36px;
+  width: 100%; max-width: 380px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.login-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+.login-msg        { font-size: 14px; min-height: 18px; }
+.login-msg.error  { color: var(--red); }
+.login-msg.ok     { color: var(--green); }
+
 /* LOGO */
 .logo {
   display: inline-flex; align-items: center;
