@@ -10,8 +10,6 @@ const SUPABASE_ANON_KEY = 'sb_publishable_aTtrP7PkUkYDalTClsyu7w_oIjnjia7';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ─── Anthropic API-nøkkel (lagres i localStorage) ────────
-let ANTHROPIC_KEY = localStorage.getItem('anthropic_key') || '';
 
 // ─── Aktivitetsfaktorer ───────────────────────────────────
 const AKTIVITET = {
@@ -148,9 +146,6 @@ async function loadSettings() {
     document.getElementById('s-maal').value      = settings.maal      ?? 2000;
   }
 
-  const key = localStorage.getItem('anthropic_key') ?? '';
-  document.getElementById('s-apikey').value = key;
-  ANTHROPIC_KEY = key;
   updateBMRLive();
 }
 
@@ -163,9 +158,6 @@ async function saveSettings() {
     hoyde:     Number(document.getElementById('s-hoyde').value),
     maal:      Number(document.getElementById('s-maal').value) || 2000,
   };
-
-  ANTHROPIC_KEY = document.getElementById('s-apikey').value.trim();
-  localStorage.setItem('anthropic_key', ANTHROPIC_KEY);
 
   // Lagre profil i Supabase (upsert = insert eller oppdater)
   await db.from('profiles').upsert({ user_id: currentUser.id, ...settings });
@@ -222,11 +214,6 @@ async function deleteExercise(id) {
 async function registerWithAI() {
   const text = document.getElementById('ai-input').value.trim();
   if (!text) return;
-  if (!ANTHROPIC_KEY) {
-    showAIMsg('Legg inn Anthropic API-nøkkel i Innstillinger', false);
-    return;
-  }
-
   const btn = document.getElementById('btn-ai');
   btn.textContent = '&#8987; Tenker...';
   btn.disabled = true;
@@ -254,22 +241,15 @@ Returner dette JSON-formatet:
 Referanseverdier: Grandiosa hel ~960kcal, halv ~480kcal. Havregrøt 350ml ~180kcal. Løping 30min ~300kcal. Styrketrening 45min ~250kcal.`;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    // Kall vår egen Vercel serverless function – unngår CORS og skjuler API-nøkkelen
+    const res = await fetch('/api/ai', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'anthropic-version': '2023-06-01',
-        'x-api-key': ANTHROPIC_KEY,
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }],
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
     });
 
     const data = await res.json();
-    if (!res.ok) throw new Error(data?.error?.message ?? `HTTP ${res.status}`);
+    if (!res.ok) throw new Error(data?.error ?? `HTTP ${res.status}`);
 
     const raw    = data.content?.map(b => b.text ?? '').join('').trim();
     const match  = raw.match(/\{[\s\S]*\}/);
