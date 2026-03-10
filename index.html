@@ -57,40 +57,42 @@
 
         <!-- Kaloribalanse-kort -->
         <div id="balance-card" class="card balance-card">
-          <div class="balance-header">
-            <span class="balance-title">Kaloribalanse</span>
-            <span id="balance-status-icon">&#10003;</span>
-          </div>
-          <div class="balance-rows">
-            <div class="balance-row">
-              <span>&#x1F6B6;</span>
-              <div class="balance-label-col">
-                <span>Total daglig forbrenning (TDEE)</span>
-                <small id="bmr-note" class="muted"></small>
-              </div>
-              <span id="bal-tdee" class="bval muted"></span>
+          <p class="bal-title">Kalorier i dag</p>
+
+          <!-- Primærkort: spist / mål / gjenstår -->
+          <div class="bal-box">
+            <div class="bal-line">
+              <span class="bal-label">Spist:</span>
+              <span class="bal-num" id="bal-eaten"></span>
             </div>
-            <div class="balance-row">
-              <span>&#x1F4AA;</span>
-              <span class="flex1">Forbrent på trening</span>
-              <span id="bal-exercise" class="bval blue"></span>
+            <div class="bal-line">
+              <span class="bal-label">Daglig mål:</span>
+              <span class="bal-num" id="bal-goal"></span>
             </div>
-            <div class="balance-row">
-              <span>&#x1F37D;&#xFE0F;</span>
-              <span class="flex1">Spist i dag</span>
-              <span id="bal-eaten" class="bval bold"></span>
+            <div class="bal-spacer"></div>
+            <div class="bal-line">
+              <span class="bal-label">Gjenstår:</span>
+              <span class="bal-num bold" id="bal-remaining"></span>
             </div>
           </div>
-          <div class="balance-net-row">
-            <span id="balance-net-icon">&#x2705;</span>
-            <strong>Netto kaloribalanse</strong>
-            <span id="bal-net" class="net-value"></span>
-          </div>
-          <p id="bal-desc" class="balance-desc"></p>
+
+          <!-- Progressbar -->
           <div class="progress-track"><div id="progress-fill" class="progress-fill"></div></div>
           <div class="progress-labels">
             <span id="prog-left"></span>
             <span id="prog-right"></span>
+          </div>
+
+          <!-- Sekundærkort: trening + ekstra rom -->
+          <div class="bal-box bal-box-secondary" id="bal-exercise-box">
+            <div class="bal-line">
+              <span class="bal-label">Trening:</span>
+              <span class="bal-num blue" id="bal-exercise"></span>
+            </div>
+            <div class="bal-line">
+              <span class="bal-label">Du kan derfor spise:</span>
+              <span class="bal-num bold" id="bal-can-eat"></span>
+            </div>
           </div>
         </div>
 

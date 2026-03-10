@@ -117,17 +117,39 @@ main { max-width: 720px; margin: 0 auto; padding: 0 16px 80px; }
 .bval.blue  { color: var(--blue); }
 .bval.bold  { font-weight: 700; }
 
-.balance-net-row {
-  display: flex; align-items: center; gap: 10px;
-  padding-top: 12px; font-size: 16px;
-}
-.balance-net-row strong { flex: 1; font-size: 16px; }
-.net-value { font-size: 22px; font-weight: 700; }
-.net-big   { font-size: 32px; font-weight: 700; margin: 8px 0; }
-.net-value.green, .net-big.green { color: var(--green); }
-.net-value.red,   .net-big.red   { color: var(--red); }
+.net-big { font-size: 32px; font-weight: 700; margin: 8px 0; }
+.net-big.green { color: var(--green); }
+.net-big.red   { color: var(--red); }
 
-.balance-desc { font-size: 13px; color: var(--muted); margin-top: 6px; }
+/* ── NYTT KALORIBALANSE-KORT ── */
+.bal-title {
+  font-size: 15px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.bal-box {
+  background: var(--subtle);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  font-family: 'DM Mono', 'Courier New', monospace;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.bal-box-secondary { margin-top: 10px; margin-bottom: 0; }
+
+.bal-line {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 16px; line-height: 1.7;
+}
+.bal-label { color: var(--muted); min-width: 140px; flex-shrink: 0; }
+.bal-num   { font-weight: 600; font-size: 17px; }
+.bal-num.bold  { font-weight: 700; font-size: 18px; }
+.bal-num.green { color: var(--green); }
+.bal-num.red   { color: var(--red); }
+.bal-num.blue  { color: var(--blue); }
+
+.bal-spacer { height: 8px; }
 
 .progress-track {
   background: var(--subtle); border-radius: 99px;

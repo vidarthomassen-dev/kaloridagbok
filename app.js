@@ -318,38 +318,42 @@ function showAIMsg(text, ok) {
 //  RENDER: KALORIBALANSE
 // ═════════════════════════════════════════════════════════
 function renderBalance() {
-  const tdee     = kalkulerTDEE(settings) ?? (settings.maal || 2000);
-  const bmr      = kalkulerBMR(settings);
-  const faktor   = AKTIVITET[settings.aktivitet]?.faktor ?? 1.35;
-  const label    = AKTIVITET[settings.aktivitet]?.label  ?? 'Lett aktiv';
+  const goal     = settings.maal || 2000;
   const eaten    = dayData.meals    .reduce((s, m) => s + (m.kcal        ?? 0), 0);
   const exercise = dayData.exercises.reduce((s, x) => s + (x.kcal_burned ?? 0), 0);
-  const balance  = eaten - tdee - exercise;
-  const ok       = balance <= 0;
 
-  document.getElementById('bal-tdee').textContent     = `−${tdee} kcal`;
-  document.getElementById('bal-exercise').textContent = `−${exercise} kcal`;
-  document.getElementById('bal-eaten').textContent    = `+${eaten} kcal`;
-  document.getElementById('bal-net').textContent      = `${balance > 0 ? '+' : ''}${balance} kcal`;
-  document.getElementById('bal-net').className        = 'net-value ' + (ok ? 'green' : 'red');
-  document.getElementById('balance-net-icon').textContent  = ok ? '✅' : '🔴';
-  document.getElementById('balance-status-icon').textContent = ok ? '✅' : '🔴';
-  document.getElementById('bal-desc').textContent     = ok
-    ? `Underskudd på ${Math.abs(balance)} kcal – kroppen bruker mer enn du spiser`
-    : `Overskudd på ${balance} kcal – du har spist mer enn kroppen bruker`;
+  // Uten trening: gjenstår = mål - spist
+  const remaining = goal - eaten;
+  const ok        = remaining >= 0;
 
-  if (bmr) {
-    document.getElementById('bmr-note').textContent = `BMR ${bmr} kcal × ${faktor} (${label})`;
-  }
+  // Med trening: kan spise = mål - spist + trening
+  const canEat = goal - eaten + exercise;
 
-  const goal = settings.maal || tdee;
+  document.getElementById('bal-eaten').textContent    = `${eaten} kcal`;
+  document.getElementById('bal-goal').textContent     = `${goal} kcal`;
+
+  // Gjenstår (uten trening)
+  const remEl = document.getElementById('bal-remaining');
+  remEl.textContent = `${Math.abs(remaining)} kcal${remaining < 0 ? ' over' : ''}`;
+  remEl.className   = 'bal-num bold ' + (ok ? 'green' : 'red');
+
+  // Progressbar
   const pct  = Math.min(100, (eaten / goal) * 100);
   const fill = document.getElementById('progress-fill');
   fill.style.width      = pct + '%';
   fill.style.background = ok ? '#22c55e' : '#ef4444';
-
-  document.getElementById('prog-left').textContent  = `Spist: ${eaten} kcal`;
+  document.getElementById('prog-left').textContent  = `${Math.round(pct)}%`;
   document.getElementById('prog-right').textContent = `Mål: ${goal} kcal`;
+
+  // Sekundærkort: vis kun hvis trening er logget
+  const exBox = document.getElementById('bal-exercise-box');
+  if (exercise > 0) {
+    document.getElementById('bal-exercise').textContent = `+${exercise} kcal`;
+    document.getElementById('bal-can-eat').textContent  = `${canEat} kcal til i dag`;
+    exBox.style.display = 'block';
+  } else {
+    exBox.style.display = 'none';
+  }
 
   document.getElementById('balance-card').style.borderColor = ok ? '#22c55e' : '#ef4444';
 }
