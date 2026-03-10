@@ -248,7 +248,19 @@ Referanseverdier: Grandiosa hel ~960kcal, halv ~480kcal. Havregrøt 350ml ~180kc
       body: JSON.stringify({ prompt }),
     });
 
-    const data = await res.json();
+    // Les alltid som tekst først, så vi kan gi en fornuftig feilmelding
+    const rawText = await res.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch {
+      // Vercel returnerte HTML (404-side, splashside, o.l.) – funksjonen ble ikke funnet
+      throw new Error(
+        `Serverless-funksjonen ble ikke funnet (HTTP ${res.status}). ` +
+        `Sjekk at api/ai.js er pushet til GitHub og at Vercel er redeployet. ` +
+        `Råsvar: ${rawText.slice(0, 120)}`
+      );
+    }
     if (!res.ok) throw new Error(data?.error ?? `HTTP ${res.status}`);
 
     const raw    = data.content?.map(b => b.text ?? '').join('').trim();
