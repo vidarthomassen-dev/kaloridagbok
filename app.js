@@ -141,9 +141,9 @@ async function loadSettings() {
     settings = { ...settings, ...data };
     document.getElementById('s-kjonn').value     = settings.kjonn     ?? 'mann';
     document.getElementById('s-aktivitet').value = settings.aktivitet ?? 'lett';
-    document.getElementById('s-alder').value     = settings.alder  || '';
-    document.getElementById('s-vekt').value      = settings.vekt   || '';
-    document.getElementById('s-hoyde').value     = settings.hoyde  || '';
+    document.getElementById('s-alder').value     = (settings.alder  > 0) ? settings.alder  : '';
+    document.getElementById('s-vekt').value      = (settings.vekt   > 0) ? settings.vekt   : '';
+    document.getElementById('s-hoyde').value     = (settings.hoyde  > 0) ? settings.hoyde  : '';
     document.getElementById('s-maal').value      = settings.maal      ?? 2000;
   }
 
@@ -151,12 +151,16 @@ async function loadSettings() {
 }
 
 async function saveSettings() {
+  const toNum = id => {
+    const v = Number(document.getElementById(id).value);
+    return v > 0 ? v : null;
+  };
   settings = {
     kjonn:     document.getElementById('s-kjonn').value,
     aktivitet: document.getElementById('s-aktivitet').value,
-    alder:     Number(document.getElementById('s-alder').value),
-    vekt:      Number(document.getElementById('s-vekt').value),
-    hoyde:     Number(document.getElementById('s-hoyde').value),
+    alder:     toNum('s-alder'),
+    vekt:      toNum('s-vekt'),
+    hoyde:     toNum('s-hoyde'),
     maal:      Number(document.getElementById('s-maal').value) || 2000,
   };
 

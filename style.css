@@ -54,6 +54,24 @@ body {
 /* ── PAGE ───────────────────────────────────── */
 .page.hidden { display: none !important; }
 
+/* ── INPUTS & SELECTS ────────────────────────── */
+input, select {
+  background: var(--surface-2); color: var(--text);
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  padding: 11px 14px; font-family: inherit; font-size: 15px;
+  outline: none; width: 100%; transition: border-color .15s, box-shadow .15s;
+  appearance: none; -webkit-appearance: none;
+}
+input:focus, select:focus {
+  border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-soft);
+}
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238e8e93' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center;
+  padding-right: 36px;
+}
+select option { background: var(--surface); }
+
 /* ── LOGIN ───────────────────────────────────── */
 #page-login {
   display: flex; align-items: center; justify-content: center;
@@ -169,9 +187,9 @@ main {
   font-size: 48px; font-weight: 800; line-height: 1;
   letter-spacing: -2px; color: var(--green);
 }
-.hero-unit { font-size: 18px; font-weight: 600; color: var(--muted); }
-.hero-label-inline {
-  font-size: 13px; font-weight: 500; color: var(--muted);
+.hero-unit, .hero-label-inline {
+  font-size: 13px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.5px;
 }
 .hero-label-inline {
   font-size: 14px; font-weight: 600; color: var(--muted);
