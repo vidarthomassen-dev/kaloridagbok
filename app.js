@@ -220,7 +220,7 @@ async function registerWithAI() {
   const text = document.getElementById('ai-input').value.trim();
   if (!text) return;
   const btn = document.getElementById('btn-ai');
-  btn.textContent = '&#8987; Tenker...';
+  btn.textContent = '⏳ Tenker...';
   btn.disabled = true;
 
   const prompt = `Du er en norsk mat- og treningsassistent. Analyser teksten og returner KUN gyldig JSON uten markdown eller forklaringer.
