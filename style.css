@@ -299,6 +299,14 @@ main {
   border-radius: var(--r-sm); padding: 12px 20px;
   font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer;
 }
+.btn-secondary {
+  background: transparent; color: var(--muted);
+  border: 1.5px solid var(--border); border-radius: var(--r-sm);
+  padding: 12px 20px; font-family: inherit; font-size: 15px;
+  font-weight: 500; cursor: pointer; width: 100%;
+  transition: background .15s, color .15s;
+}
+.btn-secondary:hover { background: var(--surface-2); color: var(--text); }
 .btn-logout {
   background: var(--surface-2); color: var(--muted);
   border: 1px solid var(--border); border-radius: var(--r-sm);
